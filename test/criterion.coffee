@@ -253,6 +253,22 @@ module.exports =
 
             test.done()
 
+        'raw with criterion param': (test) ->
+            c = criterion 'x = ? AND ?', 7, (criterion 'y = ?', 8)
+
+            test.equal c.sql(), 'x = ? AND y = ?'
+            test.deepEqual c.params(), [7, 8]
+
+            test.done()
+
+        'raw with criterion params': (test) ->
+            c = criterion 'x = ? AND ? AND ? AND ?', 7, (criterion 'y = ?', 8), (criterion { z: 9 }), (criterion { created_at: { $lt: criterion 'NOW()' } })
+
+            test.equal c.sql(), 'x = ? AND y = ? AND z = ? AND created_at < NOW()'
+            test.deepEqual c.params(), [7, 8, 9]
+
+            test.done()
+
         'raw with param and array': (test) ->
             c = criterion 'x = ? AND y IN (?)', 7, [8,9,10]
 
@@ -276,4 +292,3 @@ module.exports =
             test.deepEqual c.params(), [7, 8, 9, 10, 11, 12, 13, 14]
 
             test.done()
-

@@ -26,13 +26,15 @@ prototypes.raw = beget prototypes.base,
             i++
             if Array.isArray params[i]
                 (params[i].map -> "?").join ", "
+            else if isRaw params[i]
+                params[i].sql()
             else
                 "?"
 
     params: ->
         if @_params
             params = []
-            @_params.forEach (c) -> params = params.concat c
+            @_params.forEach (c) -> params = params.concat if isRaw c then c.params() else c
             params
 
 constructors.raw = (sql, params) ->
