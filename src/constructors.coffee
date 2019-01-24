@@ -23,7 +23,7 @@ prototypes.raw = beget prototypes.base,
         params = @_params
 
         @_sql
-        .split(/\\\?/)
+        .split(/\?{2,}/g)
         .map (s) ->
             s.replace /\?/g, ->
                 i++
@@ -33,7 +33,7 @@ prototypes.raw = beget prototypes.base,
                     params[i].sql()
                 else
                     "?"
-        .join "\\?"
+        .join "??"
 
     params: ->
         if @_params
